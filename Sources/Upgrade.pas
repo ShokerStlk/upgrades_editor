@@ -36,9 +36,13 @@ public
   point:TPoint;       //точка на экране апа
   coords:TPoint;      //координаты на экране апгрейда
   name:string;
-  up_prop:string;
   cost:integer;
-  value:string;
+  up_prop_1:string;
+  value_1:string;
+  up_prop_2:string;
+  value_2:string;
+  up_prop_3:string;
+  value_3:string;
 
   inherited_section:string;
 
@@ -240,12 +244,17 @@ begin
   coords.y:=0;
   name:='';
   _my_group:=nil;
-  up_prop:='';
   inv_name:='';
   inv_descr:='';
 
+  up_prop_1:='';
+  self.value_1:='0';
+  up_prop_2:='';
+  self.value_2:='0';
+  up_prop_3:='';
+  self.value_3:='0';
+
   self.cost:=100;
-  self.value:='0';
   self.precondition_functor:='inventory_upgrades.precondition_functor_a';
   self.precondition_parameter:='true';
   self.effect_functor:='inventory_upgrades.effect_functor_a';
@@ -284,8 +293,12 @@ var
   def_p:TPoint;
 begin
   name:=ReadString(str);
-  up_prop:=ReadString(str);
-  value:=ReadString(str);
+  up_prop_1:=ReadString(str);
+  value_1:=ReadString(str);
+  up_prop_2:=ReadString(str);
+  value_2:=ReadString(str);
+  up_prop_3:=ReadString(str);
+  value_3:=ReadString(str);
   str.ReadBuffer(coords, sizeof(coords));
   str.ReadBuffer(point, sizeof(point));
   str.ReadBuffer(def_p, sizeof(def_p));
@@ -319,8 +332,12 @@ var
   def_p:TPoint;
 begin
   SaveString(name, str);
-  SaveString(up_prop, str);
-  SaveString(value, str);
+  SaveString(up_prop_1, str);
+  SaveString(value_1, str);
+  SaveString(up_prop_2, str);
+  SaveString(value_2, str);
+  SaveString(up_prop_3, str);
+  SaveString(value_3, str);
   str.WriteBuffer(coords, sizeof(coords));
   str.WriteBuffer(point, sizeof(point));
   def_p:=visual.GetDefault;

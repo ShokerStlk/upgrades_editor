@@ -1,1 +1,1 @@
-# upgrades_editor
+# upgrades_editor by Sin! (SWM Edition)

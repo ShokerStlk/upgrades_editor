@@ -1,6 +1,6 @@
 object MainForm: TMainForm
-  Left = 66
-  Top = 186
+  Left = 271
+  Top = 111
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = '[const appname in code]'

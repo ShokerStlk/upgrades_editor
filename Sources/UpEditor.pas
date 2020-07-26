@@ -43,14 +43,23 @@ type
     Label6: TLabel;
     Label5: TLabel;
     edit_name: TEdit;
-    combo_property: TComboBox;
+    combo_property_1: TComboBox;
     Cost: TLabel;
     edit_cost: TEdit;
     Label8: TLabel;
-    edit_value: TEdit;
+    edit_value_1: TEdit;
     btn_stringeditor: TButton;
     Label16: TLabel;
     edit_inherits: TEdit;
+    combo_property_2: TComboBox;
+    Label17: TLabel;
+    Label18: TLabel;
+    edit_value_2: TEdit;
+    Label20: TLabel;
+    Label19: TLabel;
+    Label21: TLabel;
+    combo_property_3: TComboBox;
+    edit_value_3: TEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure previewClick(Sender: TObject);
@@ -58,9 +67,11 @@ type
     procedure FormHide(Sender: TObject);
     procedure btn_advClick(Sender: TObject);
     procedure btn_stringeditorClick(Sender: TObject);
-    procedure edit_valueChange(Sender: TObject);
     procedure edit_costKeyPress(Sender: TObject; var Key: Char);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure edit_value_1Change(Sender: TObject);
+    procedure edit_value_2Change(Sender: TObject);
+    procedure edit_value_3Change(Sender: TObject);
   private
     { Private declarations }
     _selector:TTextureSelectorForm;
@@ -69,7 +80,9 @@ type
     _editor:TTextInputForm;
     _param_list:TInfluencesList;
 
-    _last_val:string;
+    _last_val_1:string;
+    _last_val_2:string;
+    _last_val_3:string;
 
     procedure _UpdateVis();
   public
@@ -138,7 +151,9 @@ begin
 
   edit_name.Text:=_up.name;
 
-  combo_property.Text:=_up.up_prop;
+  combo_property_1.Text:=_up.up_prop_1;
+  combo_property_2.Text:=_up.up_prop_2;
+  combo_property_3.Text:=_up.up_prop_3;
 
   edit_inv_name.Text:=_up.inv_name;
   edit_inv_descr.Text:=_up.inv_descr;
@@ -151,11 +166,15 @@ begin
   edit_prereq_params.Text:=_up.prereq_params;
 
   edit_cost.Text:=inttostr(_up.cost);
-  edit_value.Text:=_up.value;
+  edit_value_1.Text:= _up.value_1;
+  edit_value_2.Text:= _up.value_2;
+  edit_value_3.Text:= _up.value_3;
 
   edit_inherits.Text:=_up.inherited_section;
 
-  _last_val:=_up.value;
+  _last_val_1:=_up.value_1;
+  _last_val_2:=_up.value_2;
+  _last_val_3:=_up.value_3;
 
   UpdatePreview;
 end;
@@ -165,7 +184,9 @@ begin
 //  if trim(edit_value.Text)='' then edit_value.Text:='0';
 
   _up.name:=edit_name.Text;
-  _up.up_prop:=combo_property.Text;
+  _up.up_prop_1:=combo_property_1.Text;
+  _up.up_prop_2:=combo_property_2.Text;
+  _up.up_prop_3:=combo_property_3.Text;
   _up.coords.X:=strtointdef(edit_sch_x.Text, _up.coords.X);
   _up.coords.Y:=strtointdef(edit_sch_y.Text, _up.coords.Y);
   _up.point.X:=strtointdef(edit_point_x.Text, _up.point.X);
@@ -182,7 +203,9 @@ begin
   _up.prereq_params:=edit_prereq_params.Text;
 
   _up.cost:=strtointdef(edit_cost.Text, _up.cost);
-  _up.value:=edit_value.Text;
+  _up.value_1:=edit_value_1.Text;
+  _up.value_2:=edit_value_2.Text;
+  _up.value_3:=edit_value_3.Text;
 
   _up.inherited_section:=edit_inherits.Text;
 
@@ -228,18 +251,6 @@ begin
   _editor.Show();
 end;
 
-procedure TUpgradeEditor.edit_valueChange(Sender: TObject);
-begin
-  try
-    if (trim(edit_value.Text)<>'') then
-      strtofloat(edit_value.Text+'0');
-    _last_val:=edit_value.Text;
-  except
-    on E:EConvertError do
-      edit_value.Text:=_last_val;
-  end;
-end;
-
 procedure TUpgradeEditor.edit_costKeyPress(Sender: TObject; var Key: Char);
 begin
   case Key of
@@ -255,6 +266,42 @@ end;
 procedure TUpgradeEditor.FormKeyPress(Sender: TObject; var Key: Char);
 begin
   if Key = chr(27) then Close;
+end;
+
+procedure TUpgradeEditor.edit_value_1Change(Sender: TObject);
+begin
+  try
+    if (trim(edit_value_1.Text)<>'') then
+      strtofloat(edit_value_1.Text+'0');
+    _last_val_1:=edit_value_1.Text;
+  except
+    on E:EConvertError do
+      edit_value_1.Text:=_last_val_1;
+  end;
+end;
+
+procedure TUpgradeEditor.edit_value_2Change(Sender: TObject);
+begin
+  try
+    if (trim(edit_value_2.Text)<>'') then
+      strtofloat(edit_value_2.Text+'0');
+    _last_val_2:=edit_value_2.Text;
+  except
+    on E:EConvertError do
+      edit_value_2.Text:=_last_val_2;
+  end;
+end;
+
+procedure TUpgradeEditor.edit_value_3Change(Sender: TObject);
+begin
+  try
+    if (trim(edit_value_3.Text)<>'') then
+      strtofloat(edit_value_3.Text+'0');
+    _last_val_3:=edit_value_3.Text;
+  except
+    on E:EConvertError do
+      edit_value_3.Text:=_last_val_3;
+  end;
 end;
 
 end.

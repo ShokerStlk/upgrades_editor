@@ -227,7 +227,7 @@ const
 
 const
   reg_key:string='STCOPGUE1.x';
-  appname:string='Gunslinger'+chr(39)+'s Upgrades Editor 1.02';
+  appname:string='Gunslinger'+chr(39)+'s Upgrades Editor 1.02 (SWM Edition v1)';
 
 implementation
 
@@ -807,8 +807,14 @@ begin
 
     s:=s+chr($0d)+chr($0a);
     s:=s+'cost = '+inttostr(_upgrades[i].cost)+chr($0d)+chr($0a);
-    if _upgrades[i].value<>'' then begin
-      s:=s+'value = '+_upgrades[i].value+chr($0d)+chr($0a);
+    if (_upgrades[i].value_1<>'') and (_upgrades[i].value_1<>'0') then begin
+      s:=s+'value_' + _upgrades[i].up_prop_1 + ' = '+_upgrades[i].value_1+chr($0d)+chr($0a);
+    end;
+    if (_upgrades[i].value_2<>'') and (_upgrades[i].value_2<>'0') then begin
+      s:=s+'value_' + _upgrades[i].up_prop_2 + ' = '+_upgrades[i].value_2+chr($0d)+chr($0a);
+    end;
+    if (_upgrades[i].value_3<>'') and (_upgrades[i].value_3<>'0') then begin
+      s:=s+'value_' + _upgrades[i].up_prop_3 + ' = '+_upgrades[i].value_3+chr($0d)+chr($0a);
     end;
     s:=s+_upgrades[i].section_params.GetText+chr($0d)+chr($0a);
     ptr:=PChar(s);
@@ -819,7 +825,15 @@ begin
     s:=s+'known = 1'+chr($0d)+chr($0a);
     s:=s+'effects = '+_upgrades[i].GetGroup().GetEffectsString(edit_wpn_name.Text)+chr($0d)+chr($0a);
     s:=s+'section = '+'up_sect_'+upgrade_name(i)+chr($0d)+chr($0a);
-    s:=s+'property = '+_upgrades[i].up_prop+chr($0d)+chr($0a);
+
+    s:=s+'property = '+_upgrades[i].up_prop_1;
+    if _upgrades[i].up_prop_2<>'' then begin
+      s:=s+', '+_upgrades[i].up_prop_2;
+    end;
+    if _upgrades[i].up_prop_3<>'' then begin
+      s:=s+', '+_upgrades[i].up_prop_3;
+    end;
+    s:=s+chr($0d)+chr($0a);
 
     s:=s+'precondition_functor = '+_upgrades[i].precondition_functor+chr($0d)+chr($0a);
     s:=s+'precondition_parameter = '+_upgrades[i].precondition_parameter+chr($0d)+chr($0a);
@@ -833,21 +847,21 @@ begin
 
 
     if _upgrades[i].inv_name='' then
-      name:='gunsl_'+edit_wpn_name.Text+'_up_'+_upgrades[i].name+'_name'
+      name:='st_swm_'+edit_wpn_name.Text+'_up_'+_upgrades[i].name+'_name'
     else
       name:=_upgrades[i].inv_name;
-    s:=s+'name ='+name +chr($0d)+chr($0a);
+    s:=s+'name = '+name +chr($0d)+chr($0a);
 
     name:= '<string id="'+name+'">'+chr($0d)+chr($0a)+'     <text>'+_upgrades[i].name+'</text>'+chr($0d)+chr($0a)+'</string>'+chr($0d)+chr($0a);
     ptr:=PChar(name);
     strings_str.WriteBuffer(ptr^, length(name));
 
     if _upgrades[i].inv_descr='' then
-      name:='gunsl_'+edit_wpn_name.Text+'_up_'+_upgrades[i].name+'_descr'
+      name:='st_swm_'+edit_wpn_name.Text+'_up_'+_upgrades[i].name+'_descr'
     else
       name:=_upgrades[i].inv_descr;
 
-    s:=s+'description ='+name +chr($0d)+chr($0a);
+    s:=s+'description = '+name +chr($0d)+chr($0a);
 
     name:= '<string id="'+name+'">'+chr($0d)+chr($0a)+'     <text>'+_upgrades[i].name+'</text>'+chr($0d)+chr($0a)+'</string>'+chr($0d)+chr($0a);
     ptr:=PChar(name);
@@ -928,8 +942,8 @@ begin
       UpdateUpgrades;
       DrawGroupsList;
       exit;
-    end else if _upgrades[i].up_prop='' then begin
-      result:='Upgrade "'+_upgrades[i].name+'" has no property!';
+    end else if _upgrades[i].up_prop_1='' then begin
+      result:='Upgrade "'+_upgrades[i].name+'" has no property ¹1!';
       _selected_index:=i;
       UpdateUpgrades;
       DrawGroupsList;
@@ -960,7 +974,11 @@ begin
     end;
   end;
   s:=s+chr($0D)+chr($0A)+'installed_upgrades = '+chr($0D)+chr($0A);
+  s:=s+'disabled_upgrades = '+chr($0D)+chr($0A);
   s:=s+'upgrade_scheme = '+'upgrade_scheme_'+edit_wpn_name.Text+chr($0D)+chr($0A)+chr($0D)+chr($0A);
+
+  s:=s+'ugpr_texture = shoker_mod\ui\ui_actor_weapons'+chr($0D)+chr($0A)+chr($0D)+chr($0A);
+
   s:=s+'upgr_icon_x = '+inttostr(_wpn_texture_rect.Left)+chr($0D)+chr($0A);
   s:=s+'upgr_icon_y = '+inttostr(_wpn_texture_rect.Top)+chr($0D)+chr($0A);
   s:=s+'upgr_icon_width = '+inttostr(_wpn_texture_rect.Right-_wpn_texture_rect.Left)+chr($0D)+chr($0A);
@@ -971,7 +989,7 @@ end;
 
 function TMainForm.texture_name(index: integer): string;
 begin
-  result:='ui_gunsl_up_'+upgrade_name(index);
+  result:='ui_swm_up_'+upgrade_name(index);
 end;
 
 procedure TMainForm.Newupgrade1Click(Sender: TObject);
@@ -1221,7 +1239,7 @@ begin
       wpn_cfg:=TFileStream.Create(dir+'\base.ltx',fmCreate);
       visual_xml:=TFileStream.Create(dir+'\inventory_upgrade.xml',fmCreate);
       visual_xml_16:=TFileStream.Create(dir+'\inventory_upgrade_16.xml',fmCreate);
-      strings_xml:=TFileStream.Create(dir+'\gunsl_up_'+edit_wpn_name.Text+'.xml',fmCreate);
+      strings_xml:=TFileStream.Create(dir+'\up_'+edit_wpn_name.Text+'.xml',fmCreate);
 
       _DumpTextures(textures_xml);
       _DumpUpgradeLTX(up_cfg, strings_xml);
